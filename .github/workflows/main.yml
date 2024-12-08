@@ -1,7 +1,7 @@
 name: pipeline
 
 on:
-  workflow_dispatch: # Putting here is also fine!!
+  workflow_dispatch:
   release:
     types: [created]
 
