@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
   - name: thefakeapi
-    image: pearlyna/backendapi:1.0
+    image: pearlyna/thefakeapi:1.0
     resources:
       limits:
         memory: "128Mi"
