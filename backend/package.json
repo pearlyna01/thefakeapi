@@ -1,0 +1,19 @@
+{
+  "name": "thefakeapi",
+  "version": "0.0.1",
+  "description": "just a fake api",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Pearlyna",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.1",
+    "helmet": "^8.0.0",
+    "mongoose": "^8.8.3",
+    "winston": "^3.17.0"
+  }
+}

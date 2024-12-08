@@ -1,0 +1,1 @@
+docker build -t backendapi:1.0 .
