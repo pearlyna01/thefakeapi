@@ -15,7 +15,7 @@ RUN addgroup --gid "$GID" "$GROUPNAME" \
 
 # copying files
 COPY . .
-RUN npm install
+RUN npm install --omit=dev
 RUN chown $USER:$GROUP -R *
 
 USER user    

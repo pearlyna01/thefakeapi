@@ -167,6 +167,8 @@ app.use((err, req, res, next) => {
 });
 
 // START THE SERVER
-app.listen(port, () => {
+const index = app.listen(port, () => {
     logger.info(`thefakeapi is listening on port ${port}`)
 });
+
+module.exports = index;

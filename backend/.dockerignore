@@ -1,5 +1,8 @@
 /node_modules
 /scripts
+/tests
+/ctrf
+jest.config.js
 .gitignore
 .env
 .dockerignore
