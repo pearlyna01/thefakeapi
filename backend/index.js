@@ -17,14 +17,14 @@ const apiToken = process.env.APITOKEN;
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.simple(),
-    transports: [ new winston.transports.Console() ],
+    transports: [new winston.transports.Console()],
 });
 
 /* MongoDB connection and schema */
 // connect to mongodb
 mongoose.connect(`${connectStr}`)
-  .then(() => logger.info('Connected to MongoDB!'))
-  .catch(error => logger.error("Unable to connect to MongoDB!", error));
+    .then(() => logger.info('Connected to MongoDB!'))
+    .catch(error => logger.error("Unable to connect to MongoDB!", error));
 
 // schema to create a message
 const messageSchema = new mongoose.Schema({
@@ -46,34 +46,28 @@ app.use(helmet());
 
 // Send new message updates to registered urls
 async function sendUpdates(message) {
-    try {
-        const urls = await Url.find({});
-        if (urls.length > 0) {
-            try {
-                urls.forEach(function(item){
+    await Url.find({})
+        .then(async (list) => {
+            if (list.length > 0) {
+                list.forEach(async (item) => {
                     fetch(item.url, {
                         method: "post",
                         headers: {
-                          'Accept': 'application/json',
-                          'Content-Type': 'application/json'
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({ message: message })
-                    }).then((response) => { 
-                        logger.info(`Message is successfuly sent to url: ${url}`);
+                    }).then((response) => {
+                        logger.info(`Message is successfuly sent to url: ${item.url}`);
                     }).catch((error) => {
-                        logger.error(`Message is unable sent to url: ${url}`);
+                        logger.error(`Message is unable sent to url: ${item.url}`);
                         logger.error(error);
-                    }) 
+                    })
                 });
-                const responseJSON = await response.json();
-                logger.info(responseJSON);
-            } catch (error) {
-                throw new Error("Unable to send updates to url");
-            } 
-        }
-    } catch (error) {
-        throw new Error("Unable to find urls");
-    }
+            }
+        }).catch(error => { 
+            throw new Error("Unable to find urls"); 
+        });
 }
 
 /* CRUD operations */
@@ -82,18 +76,18 @@ app.post('/thefakeapi', async (req, res, next) => {
     logger.info(`Request: method: ${req.method}, URL: ${req.url}, body: ${JSON.stringify(req.body)}, params: ${JSON.stringify(req.params)}`);
 
     const { message, number } = req.body;
-    if (message==undefined||number==undefined) {
+    if (message == undefined || number == undefined) {
         next(new Error("Missing message or number"));
     }
     try {
-        const messageId = await Messages.find({number:number});
+        const messageId = await Messages.find({ number: number });
         // update if there is message
-        if (messageId.length>0) {
-            await Messages.findOneAndUpdate({ _id:messageId[0]._id },{ $set: { message: message }});
+        if (messageId.length > 0) {
+            await Messages.findOneAndUpdate({ _id: messageId[0]._id }, { $set: { message: message } });
             await sendUpdates(message);
             res.send("Your message is updated!");
         } else {
-            await Messages.create({ message:message, number:number });
+            await Messages.create({ message: message, number: number });
             await sendUpdates(message);
             res.send("Your message is created!");
         }
@@ -107,7 +101,7 @@ app.get('/thefakeapi', async (req, res, next) => {
     logger.info(`Request: method: ${req.method}, URL: ${req.url}, body: ${JSON.stringify(req.body)}, params: ${JSON.stringify(req.params)}`);
     try {
         const list = await Messages.find({});
-        const mapList = list.map(aMessage => ({number:aMessage.number, message:aMessage.message}));
+        const mapList = list.map(aMessage => ({ number: aMessage.number, message: aMessage.message }));
         res.send(mapList);
     } catch (error) {
         next(error);
@@ -118,11 +112,11 @@ app.get('/thefakeapi', async (req, res, next) => {
 app.delete('/thefakeapi/:number', async (req, res, next) => {
     logger.info(`Request: method: ${req.method}, URL: ${req.url}, body: ${JSON.stringify(req.body)}, params: ${JSON.stringify(req.params)}`);
     const number = req.params.number;
-    if (number==undefined) {
+    if (number == undefined) {
         next(new Error("Missing number"));
     }
     try {
-        await Messages.deleteOne({ number:number });
+        await Messages.deleteOne({ number: number });
         res.status(200).send();
     } catch (error) {
         next(error);
@@ -131,19 +125,20 @@ app.delete('/thefakeapi/:number', async (req, res, next) => {
 
 // Webhook
 // Register url
-app.post('/webhook', async (req, res) => {
+app.post('/webhook', async (req, res, next) => {
     logger.info(`Request: method: ${req.method}, URL: ${req.url}, body: ${JSON.stringify(req.body)}, params: ${JSON.stringify(req.params)}`);
-    const { url,name,token } = req.body;
-    if (url==undefined || name==undefined || apiToken!==token) {
+    const { url, name, token } = req.body;
+    if (url == undefined || name == undefined || apiToken !== token) {
         next(new Error("Missing url or name or incorrect api token."));
     }
     try {
-        const urlId = await Url.find({name:name});
+        const urlId = await Url.find({ name: name });
         // update if there is message
-        if (name.length>0) {
-            await Url.findOneAndUpdate({ _id:urlId[0]._id },{ $set: { url: url }});
+        if (urlId.length > 0) {
+            console.log(urlId)
+            await Url.findOneAndUpdate({ _id: urlId[0]._id }, { $set: { url: url } });
         } else {
-            await Url.create({ name:name, url:url });
+            await Url.create({ name: name, url: url });
         }
         res.status(200).send('Url is registered to receive message updates');
     } catch (error) {
