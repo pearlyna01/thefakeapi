@@ -22,9 +22,12 @@ const logger = winston.createLogger({
 
 /* MongoDB connection and schema */
 // connect to mongodb
-mongoose.connect(`${connectStr}`)
-    .then(() => logger.info('Connected to MongoDB!'))
-    .catch(error => logger.error("Unable to connect to MongoDB!", error));
+logger.info("waiting for mongodb to setup")
+setTimeout(function () {
+    mongoose.connect(`${connectStr}`)
+        .then(() => logger.info('Connected to MongoDB!'))
+        .catch(error => logger.error("Unable to connect to MongoDB!", error));
+  }, 5000)
 
 // schema to create a message
 const messageSchema = new mongoose.Schema({

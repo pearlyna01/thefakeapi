@@ -43,7 +43,6 @@ spec:
           path: /thefakeapi
           port: 3000
         periodSeconds: 30
-        initialDelaySeconds: 5
       securityContext:
         runAsUser: 4000
       env:
