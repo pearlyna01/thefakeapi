@@ -1,0 +1,1 @@
+kubectl delete -f play-services.yaml && kubectl delete -f play-kube.yaml
