@@ -22,7 +22,7 @@ jobs:
       run: cd backend && docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/thefakeapi:${{ github.ref_name }}
     
     - name: Build the Docker image for frontend
-      run: cd ../frontend && docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/thefakesite:${{ github.ref_name }}
+      run: cd frontend && docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/thefakesite:${{ github.ref_name }}
      
     - name: Push backend image to repo
       run: docker push ${{ secrets.DOCKER_USERNAME }}/thefakeapi:${{ github.ref_name }}

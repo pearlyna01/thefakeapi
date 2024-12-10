@@ -1,1 +1,1 @@
-docker build -t backendapi:1.0 .
+docker build -t thefakeapi:1.0 .
