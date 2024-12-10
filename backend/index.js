@@ -89,7 +89,7 @@ app.post('/thefakeapi', async (req, res, next) => {
         } else {
             await Messages.create({ message: message, number: number });
             await sendUpdates(message);
-            res.send("Your message is created!");
+            res.status(201).send("Your message is created!");
         }
     } catch (error) {
         next(error);
@@ -133,7 +133,7 @@ app.post('/webhook', async (req, res, next) => {
     }
     try {
         const urlId = await Url.find({ name: name });
-        // update if there is message
+        // update if there is a url
         if (urlId.length > 0) {
             console.log(urlId)
             await Url.findOneAndUpdate({ _id: urlId[0]._id }, { $set: { url: url } });
