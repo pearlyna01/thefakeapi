@@ -1,0 +1,6 @@
+.dockerignore
+/__pycache__
+/.venv
+
+get_requirements.sh
+.env
