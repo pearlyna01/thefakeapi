@@ -23,11 +23,9 @@ const logger = winston.createLogger({
 /* MongoDB connection and schema */
 // connect to mongodb
 logger.info("waiting for mongodb to setup")
-setTimeout(function () {
-    mongoose.connect(`${connectStr}`)
-        .then(() => logger.info('Connected to MongoDB!'))
-        .catch(error => logger.error("Unable to connect to MongoDB!", error));
-  }, 5000)
+mongoose.connect(`${connectStr}`)
+    .then(() => logger.info('Connected to MongoDB!'))
+    .catch(error => logger.error("Unable to connect to MongoDB!", error));
 
 // schema to create a message
 const messageSchema = new mongoose.Schema({
@@ -48,7 +46,7 @@ const Url = mongoose.model('Url', urlSchema);
 app.use(helmet());
 
 // Send new message updates to registered urls
-async function sendUpdates(message) {
+async function sendUpdates(message, number) {
     await Url.find({})
         .then(async (list) => {
             if (list.length > 0) {
@@ -59,7 +57,7 @@ async function sendUpdates(message) {
                             'Accept': 'application/json',
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ message: message })
+                        body: JSON.stringify({ message: message, number: number })
                     }).then((response) => {
                         logger.info(`Message is successfuly sent to url: ${item.url}`);
                     }).catch((error) => {
@@ -87,11 +85,11 @@ app.post('/thefakeapi', async (req, res, next) => {
         // update if there is message
         if (messageId.length > 0) {
             await Messages.findOneAndUpdate({ _id: messageId[0]._id }, { $set: { message: message } });
-            await sendUpdates(message);
+            await sendUpdates(message, number);
             res.send("Your message is updated!");
         } else {
             await Messages.create({ message: message, number: number });
-            await sendUpdates(message);
+            await sendUpdates(message, number);
             res.status(201).send("Your message is created!");
         }
     } catch (error) {
@@ -138,7 +136,6 @@ app.post('/webhook', async (req, res, next) => {
         const urlId = await Url.find({ name: name });
         // update if there is a url
         if (urlId.length > 0) {
-            console.log(urlId)
             await Url.findOneAndUpdate({ _id: urlId[0]._id }, { $set: { url: url } });
         } else {
             await Url.create({ name: name, url: url });
@@ -148,7 +145,6 @@ app.post('/webhook', async (req, res, next) => {
         next(error);
     }
 });
-
 
 // Return 404 for paths that do not exist
 app.use((req, res) => {
