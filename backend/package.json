@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "jest --ci -i tests/index.test.js --detectOpenHandles --watchAll=false --forceExit"
+    "test": "jest --ci -i tests/index.test.js --watchAll=false --forceExit"
   },
   "author": "Pearlyna",
   "license": "ISC",
