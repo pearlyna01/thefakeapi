@@ -55,7 +55,7 @@ describe('test CRUD functions', () => {
             .send({ message: "another message", number: 0 });
         expect(res1.text).toEqual("Your message is updated!");
         const res2 = await request(app).get('/thefakeapi');
-        expect(res2.body).toContainEqual({ message: "anoother message", number: 0 });
+        expect(res2.body).toContainEqual({ message: "another message", number: 0 });
     })
 
     it('delete a message', async () => {
