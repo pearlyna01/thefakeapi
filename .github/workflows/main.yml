@@ -19,16 +19,17 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build the Docker image for backend
-      run: cd backend && docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/thefakeapi:${{ github.ref_name }}
+      run: cd backend && docker build . --file Dockerfile --tag pearlyna/thefakeapi:main
     
     - name: Build the Docker image for frontend
-      run: cd frontend && docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/thefakesite:${{ github.ref_name }}
+      run: cd frontend && docker build . --file Dockerfile --tag pearlyna/thefakesite:main
      
     - name: Push backend image to repo
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/thefakeapi:${{ github.ref_name }}
+      run: docker push pearlyna/thefakesite:main
 
     - name: Push frontend image to repo
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/thefakesite:${{ github.ref_name }}
+      run: docker push pearlyna/thefakesite:main
+
   test:
     runs-on: ubuntu-latest
     defaults:
@@ -39,11 +40,39 @@ jobs:
         node-version: [20.x]
     steps:
     - uses: actions/checkout@v4
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: './backend/package-lock.json'
+
     - run: npm i
     - run: npm test
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: ap-southeast-2    
+      EKS_CLUSTER_NAME: demoapp
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Update kube config
+      run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
+
+    - name: Deploy to EKS
+      run: |
+        kubectl apply -f deploy-services.yaml && \
+        kubectl apply -f deploy-kube.yaml && \
+        kubectl apply -f deploy-ingress.yaml
