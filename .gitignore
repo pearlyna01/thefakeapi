@@ -4,6 +4,9 @@
 */ctrf
 */__pycache__
 */.venv
+*/.terraform
+*/.terraform.lock.hcl
+*/terraform.tfstate*
 
 backend/mongod*
 LICENSE
