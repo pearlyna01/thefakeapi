@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
     - name: thefakesite
-      image: pearlyna/thefakesite:1.0
+      image: pearlyna/thefakesite:main
       resources:
         limits:
           memory: "128Mi"
@@ -31,7 +31,7 @@ metadata:
 spec:
   containers:
     - name: thefakeapi
-      image: pearlyna/thefakeapi:1.0
+      image: pearlyna/thefakeapi:main
       resources:
         limits:
           memory: "128Mi"
