@@ -63,3 +63,5 @@ A simple CRUD API to create/read/update/delete messages. Scripts to setup the AP
 I setup a kubernetes cluster using AWS' EKS managed service. The cluster consists of 2 EC2 instances as worker nodes, a NAT gateway, and a network load balancer. 
 
 ![architecture.png](architecture.png)
+
+A CICD pipeline is setup using Github Actions. The pipeline can be found in .github/workflows/main.yml
