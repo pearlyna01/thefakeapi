@@ -47,3 +47,19 @@ A simple CRUD API to create/read/update/delete messages. Scripts to setup the AP
     - `cd backend`
     - `npm i`
     - `npm run start`
+
+## How security mechanisms are implemented.
+1. Set HTTP response security headers using helmet.js. 
+   - When the backend server sends a response to client, it will attach extra security headers such as "cross-origin-opener-policy" to place restrictions on what the website can do with the response. 
+2. Set the container to run as an non-root user and prevent privilege escalation attacks.
+   - The container will run as a user that is set during docker build.
+   - For example, running as a user with uid 4000 
+  ``` 
+  - securityContext: 
+      runAsUser: 4000
+  ```
+
+## Architecure 
+I setup a kubernetes cluster using AWS' EKS managed service. The cluster consists of 2 EC2 instances as worker nodes, a NAT gateway, and a network load balancer. 
+
+![architecture.png](architecture.png)
