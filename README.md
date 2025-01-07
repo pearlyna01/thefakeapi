@@ -46,17 +46,6 @@ Running in cloud (AWS)
     - `npm i`
     - `npm run start`
 
-## How security mechanisms are implemented.
-1. Set HTTP response security headers using helmet.js. 
-   - When the backend server sends a response to client, it will attach extra security headers such as "cross-origin-opener-policy" to place restrictions on what the website can do with the response. 
-2. Set the container to run as an non-root user and prevent privilege escalation attacks.
-   - The container will run as a user that is set during docker build.
-   - For example, running as a user with uid 4000 
-  ``` 
-  - securityContext: 
-      runAsUser: 4000
-  ```
-
 ## Architecure 
 ![architecture.png](architecture.png)
 
