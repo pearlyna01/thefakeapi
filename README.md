@@ -3,8 +3,7 @@
 A simple CRUD API to create/read/update/delete messages. Scripts to setup the API are available.
 
 ## Getting Started
-- To run this project, there are 2 ways:
-  1. Running locally on your machine
+Running locally on your machine
      - Requirements:
        - Docker Desktop (kubernetes enabled)
        - kubectl
@@ -14,7 +13,7 @@ A simple CRUD API to create/read/update/delete messages. Scripts to setup the AP
        - `sh local-deploy-scripts/delete-kubernetes.sh`
      - To access the website:
        - http://localhost
-  2. Running in cloud (AWS)
+Running in cloud (AWS)
      - Requirements:
        - Terraform
        - AWS CLI
@@ -37,7 +36,6 @@ A simple CRUD API to create/read/update/delete messages. Scripts to setup the AP
        - `cd eks-setup`
        - `sh delete-ingress-controller.sh` to delete the ingress controller
        - `sh delete-eks.sh` to delete the eks cluster using terraform
-- Please allow some time (around 3 minutes) for the thefakeapi container to restart so that it will connect to the mongodb container
 - For local development,
   - To start the frontend to test the api
     - `cd frontend` 
@@ -60,8 +58,6 @@ A simple CRUD API to create/read/update/delete messages. Scripts to setup the AP
   ```
 
 ## Architecure 
-I setup a kubernetes cluster using AWS' EKS managed service. The cluster consists of 2 EC2 instances as worker nodes, a NAT gateway, and a network load balancer. 
-
 ![architecture.png](architecture.png)
 
 A CICD pipeline is setup using Github Actions. The pipeline can be found in .github/workflows/main.yml
