@@ -4,8 +4,8 @@ A simple CRUD API to create/read/update/delete messages. Scripts to setup the AP
 
 ## Getting Started
 Running locally on your machine
-     - Requirements:
-       - Docker Desktop (kubernetes enabled)
+- Requirements:
+     - Docker Desktop (kubernetes enabled)
        - kubectl
      - Using a bash terminal, run the following command to start the kubernetes cluster locally:
        - `sh local-deploy-scripts/test-kubernetes.sh`
